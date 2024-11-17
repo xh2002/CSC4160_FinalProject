@@ -1,8 +1,9 @@
-# **项目中期报告**  
-## **Report**  
+# **CSC4160 Final Project: Cloud-Enabled Distributed MapReduce System Implementation**  
+## **Midterm Report**  
 
-### Name: Xu Boshi & Chen Danyang
-### Student ID: 122040075 & 123090018 
+> ### Name & Student ID: 
+> ### Boshi Xu (122040075) 
+> ### Danyang Chen (123090018)
 
 ---
 
