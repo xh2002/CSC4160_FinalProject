@@ -1,29 +1,39 @@
 package mr
 
-//
-// RPC definitions.
-//
-// remember to capitalize all names.
-//
+import (
+	"os"
+	"strconv"
+)
 
-import "os"
-import "strconv"
+// 消息类型的枚举定义
+type MsgType int
 
-//
-// example to show how to declare the arguments
-// and reply for an RPC.
-//
+// 消息类型常量
+const (
+	RequestTask         MsgType = iota // Worker 请求任务
+	AssignMapTask                      // Coordinator 分配 Map 任务
+	AssignReduceTask                   // Coordinator 分配 Reduce 任务
+	MapTaskCompleted                   // Worker 通知 Map 任务完成
+	MapTaskFailed                      // Worker 通知 Map 任务失败
+	ReduceTaskCompleted                // Worker 通知 Reduce 任务完成
+	ReduceTaskFailed                   // Worker 通知 Reduce 任务失败
+	CoordinatorEnd                     // Coordinator 通知 Worker 系统关闭
+	CoordinatorWait                    // Coordinator 通知 Worker 等待下一任务
+)
 
-type ExampleArgs struct {
-	X int
+// 用于 Worker 向 Coordinator 发送消息
+type WorkerRequest struct {
+	Type   MsgType // 消息类型
+	TaskID int     // 任务 ID，适用于任务完成或失败通知
 }
 
-type ExampleReply struct {
-	Y int
+// 用于 Coordinator 向 Worker 回复消息
+type CoordinatorResponse struct {
+	Type      MsgType // 消息类型
+	TaskID    int     // 分配的任务 ID
+	InputFile string  // Map 任务的输入文件路径
+	NumReduce int     // Reduce 任务总数
 }
-
-// Add your RPC definitions here.
-
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the coordinator.
