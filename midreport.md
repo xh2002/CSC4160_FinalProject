@@ -59,7 +59,7 @@ By achieving these goals, the project will showcase how modern cloud computing t
 - **Performance Optimization**: Optimize system performance based on test results and resolve identified issues.  
 - **Documentation**: Prepare project documentation, summarizing the development process and test outcomes.  
 
-![timeline](.\pictures\image.png)
+![timeline](./pictures/image.png)
 
 ---
 # 需要更改内容！！！！！！！！！！！！！！！是瞎写的！！
