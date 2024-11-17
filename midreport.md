@@ -42,7 +42,7 @@ By achieving these goals, the project will showcase how modern cloud computing t
 - System Design: Design the system architecture, focusing on the interaction between the coordinator and workers.
 - Technology Selection: Choose suitable cloud services, such as AWS EC2 and S3, for system deployment.  
 
-#### 2.2 时间线  
+#### 2.2 Implementation and Testing [Week 3-7]  
 - System Implementation: 
   - Coordinator Implementation: Develop the coordinator module for task assignment, progress tracking, and fault-tolerance mechanisms.
   - Worker Implementation: Implement the worker module to perform Map and Reduce operations, handling data processing tasks.
@@ -53,7 +53,7 @@ By achieving these goals, the project will showcase how modern cloud computing t
   - Integration Testing: Validate the complete MapReduce workflow, focusing on seamless communication and data processing.
   - Stress Testing: Assess system performance under high concurrency and large datasets to ensure robustness and efficiency. 
 
-#### 2.3 Final Integration and Optimization  
+#### 2.3 Final Integration and Optimization [Week 8-10]  
 - Deployment: Deploy the system in a cloud 
 environment and conduct comprehensive testing.  
 - Performance Optimization: Optimize system performance 
