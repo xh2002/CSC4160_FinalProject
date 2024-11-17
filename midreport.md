@@ -18,7 +18,7 @@ In recent years, cloud computing has further revolutionized distributed systems.
 The primary goal of this project is to implement a functional, cloud-based distributed MapReduce system. This system aims to achieve the following objectives:  
 
 - **Develop a Coordinator and Worker Framework**:  
-  Implement a master-worker architecture where the coordinator assigns tasks and monitors worker progress, ensuring fault tolerance through task reassignment.  
+  Implement a distributed MapReduce system with one coordinator and multiple workers running in parallel. Workers communicate with the coordinator via RPC, requesting tasks, processing input files, writing outputs, and looping to request new tasks. The coordinator monitors worker progress and reassigns tasks if a worker fails to complete them within ten seconds, ensuring fault tolerance and efficient task execution. 
 
 - **Leverage Cloud Resources**:  
   Utilize AWS services like EC2 for computation, S3 for data storage, and Auto Scaling for dynamic resource allocation based on workload demands.  
