@@ -36,18 +36,32 @@ By achieving these goals, the project will showcase how modern cloud computing t
 
 ---
 
-### **2. 项目路线图** [3 分]  
-#### 2.1 项目总体计划概述  
-- 任务的总体描述及阶段性目标  
+### **2. Project Roadmap**   
+#### 2.1 Requirement Analysis and Design [Week 1-2]  
+- Requirement Definition: Analyze project requirements and establish functional and performance objectives.
+- System Design: Design the system architecture, focusing on the interaction between the coordinator and workers.
+- Technology Selection: Choose suitable cloud services, such as AWS EC2 and S3, for system deployment.  
 
 #### 2.2 时间线  
-- 阶段 1：需求分析与设计  
-- 阶段 2：系统实现与测试  
-- 阶段 3：最终整合与优化  
+- System Implementation: 
+  - Coordinator Implementation: Develop the coordinator module for task assignment, progress tracking, and fault-tolerance mechanisms.
+  - Worker Implementation: Implement the worker module to perform Map and Reduce operations, handling data processing tasks.
+  - Cloud Integration: Integrate AWS EC2 for computation and S3 for distributed storage to enable a scalable system.
 
-#### 2.3 风险分析与应对策略  
-- 列出潜在风险  
-- 针对每项风险提出具体的解决方案  
+- Testing
+  - Unit Testing: Test individual functions of the coordinator and worker modules to ensure accuracy and reliability.
+  - Integration Testing: Validate the complete MapReduce workflow, focusing on seamless communication and data processing.
+  - Stress Testing: Assess system performance under high concurrency and large datasets to ensure robustness and efficiency. 
+
+#### 2.3 Final Integration and Optimization  
+- Deployment: Deploy the system in a cloud 
+environment and conduct comprehensive testing.  
+- Performance Optimization: Optimize system performance 
+based on test results and resolve identified issues.
+- Documentation: Prepare project documentation, 
+summarizing the development process and test outcomes.
+
+![timeline](image.png)
 
 ---
 
