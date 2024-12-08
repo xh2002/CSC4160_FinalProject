@@ -70,7 +70,7 @@ func Worker(mapf func(string, string) []KeyValue,
 
 // Handle a Map task
 func handleMapTask(taskID int, inputFile string, nReduce int, mapf func(string, string) []KeyValue) bool {
-	// Read the input file
+	// 读取输入文件
 	file, err := os.Open(inputFile)
 	if err != nil {
 		log.Printf("Worker: Failed to open file %s: %v", inputFile, err)
@@ -84,49 +84,58 @@ func handleMapTask(taskID int, inputFile string, nReduce int, mapf func(string, 
 		return true
 	}
 
-	// Call the user-defined Map function
+	// 调用用户定义的 Map 函数
 	intermediate := mapf(inputFile, string(content))
 
-	// Partition the intermediate key-value pairs into buckets
+	// 按键分区，将中间结果分成 nReduce 个桶
 	buckets := make([][]KeyValue, nReduce)
 	for _, kv := range intermediate {
 		bucket := ihash(kv.Key) % nReduce
 		buckets[bucket] = append(buckets[bucket], kv)
 	}
 
-	// Write the buckets to intermediate files
+	// 为每个桶创建对应的中间文件
 	for i, bucket := range buckets {
+		// 使用临时文件
+		tmpFileName := fmt.Sprintf("mr-%d-%d-tmp", taskID, i)
 		fileName := fmt.Sprintf("mr-%d-%d", taskID, i)
-		file, err := os.Create(fileName)
+		tmpFile, err := os.Create(tmpFileName)
 		if err != nil {
-			log.Printf("Worker: Failed to create file %s: %v", fileName, err)
+			log.Printf("Worker: Failed to create tmp file %s: %v", tmpFileName, err)
 			return true
 		}
-		enc := json.NewEncoder(file)
+		enc := json.NewEncoder(tmpFile)
 		for _, kv := range bucket {
 			if err := enc.Encode(&kv); err != nil {
-				file.Close()
-				log.Printf("Worker: Failed to write to file %s: %v", fileName, err)
+				tmpFile.Close()
+				log.Printf("Worker: Failed to write to tmp file %s: %v", tmpFileName, err)
 				return true
 			}
 		}
-		file.Close()
+		tmpFile.Close()
+
+		// 重命名临时文件为正式文件
+		if err := os.Rename(tmpFileName, fileName); err != nil {
+			log.Printf("Worker: Failed to rename tmp file %s to %s: %v", tmpFileName, fileName, err)
+			return true
+		}
 	}
 
 	return false
 }
 
-// Handle a Reduce task
 func handleReduceTask(taskID int, nReduce int, reducef func(string, []string) string) bool {
-	// Read intermediate files
+	// 读取中间文件
 	intermediate := []KeyValue{}
 	for i := 0; i < nReduce; i++ {
 		fileName := fmt.Sprintf("mr-%d-%d", i, taskID)
 		file, err := os.Open(fileName)
 		if err != nil {
-			log.Printf("Worker: Failed to open file %s: %v", fileName, err)
-			return true
+			// 如果文件不存在，跳过
+			log.Printf("Worker: File %s does not exist, skipping...", fileName)
+			continue
 		}
+		log.Printf("Worker: Successfully opened file %s for Reduce Task %d", fileName, taskID)
 
 		dec := json.NewDecoder(file)
 		for {
@@ -139,18 +148,26 @@ func handleReduceTask(taskID int, nReduce int, reducef func(string, []string) st
 		file.Close()
 	}
 
-	// Sort intermediate results by key
+	// 如果没有中间数据，则直接返回
+	if len(intermediate) == 0 {
+		log.Printf("Worker: No intermediate data for Reduce Task %d, skipping...", taskID)
+		return false
+	}
+
+	// 按键排序
 	sortByKey(intermediate)
 
-	// Group values by key and write the output
-	outputFile := fmt.Sprintf("mr-out-%d", taskID)
-	file, err := os.Create(outputFile)
+	// 创建临时输出文件
+	tmpOutputFileName := fmt.Sprintf("mr-out-%d-tmp", taskID)
+	outputFileName := fmt.Sprintf("mr-out-%d", taskID)
+	tmpFile, err := os.Create(tmpOutputFileName)
 	if err != nil {
-		log.Printf("Worker: Failed to create output file %s: %v", outputFile, err)
+		log.Printf("Worker: Failed to create tmp output file %s: %v", tmpOutputFileName, err)
 		return true
 	}
-	defer file.Close()
+	defer tmpFile.Close()
 
+	// 按键调用 Reduce 函数并写入结果
 	for i := 0; i < len(intermediate); {
 		j := i + 1
 		for j < len(intermediate) && intermediate[j].Key == intermediate[i].Key {
@@ -161,8 +178,15 @@ func handleReduceTask(taskID int, nReduce int, reducef func(string, []string) st
 			values = append(values, intermediate[k].Value)
 		}
 		result := reducef(intermediate[i].Key, values)
-		fmt.Fprintf(file, "%v %v\n", intermediate[i].Key, result)
+		// 写入临时文件
+		fmt.Fprintf(tmpFile, "%v %v\n", intermediate[i].Key, result)
 		i = j
+	}
+
+	// 重命名临时文件为正式文件
+	if err := os.Rename(tmpOutputFileName, outputFileName); err != nil {
+		log.Printf("Worker: Failed to rename tmp output file %s to %s: %v", tmpOutputFileName, outputFileName, err)
+		return true
 	}
 
 	return false
