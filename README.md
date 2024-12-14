@@ -6,11 +6,12 @@ Final Project of CSC4160 at CUHK(SZ): Cloud-Based Distributed MapReduce System
 > - Danyang Chen (123090018)
 
 
-### Key Points:
-1. Mapreduce Implementation
-2. Cloud Environment Integration
-3. Auto Scaling and Fault Tolerance
-4. Performance Testing
+### Show: run a wordcount task on our system
+Including:
+1. Cloud environment integration
+2. Wordcount execution
+3. Fault Tolerance
+4. CPU observation
 
 
  Timeline:  
