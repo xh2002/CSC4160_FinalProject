@@ -10,25 +10,25 @@
 台词：
 ```
 Hello everyone, and welcome to the demonstration of our CSC4160 Cloud Computing project: A Cloud-Based Distributed MapReduce System.
-This project aims to showcase the power of distributed and cloud computing by running the MapReduce framework in AWS environment.
-We have implemented four key functionalities:
-1. Mapreduce Implementation: Implemented the Mapreduce framework in Google's paper based on Go on our devices.
-2. Cloud Environment Integration: Deploying MapReduce on AWS EC2 and utilizing S3 for data storage as much as we can.
-3. Auto Scaling and Fault Tolerance: Ensuring the system can recover from failures and redistribute tasks efficiently.
-4. Performance Testing: Visualizing the system's performance and scalability using AWS CloudWatch metrics.
+This demo aims to run a wordcount task on our Cloud-Based Distributed MapReduce System.
+We will show four parts:
+1. Cloud Environment Integration: Deploying MapReduce on AWS EC2 and utilizing S3 for data storage.
+2. Wordcount execution : Proof that we have implement Distributed MapReduce framework.
+3. Fault Tolerance: Ensuring the system can recover from failures and redistribute tasks efficiently.
+4. CPU observation: Visualizing the system's performance and scalability using AWS CloudWatch metrics.
 Now, let's dive into the demonstration."
 ```
 ---
 
 ### **2. 云环境集成**
 - **演示内容**：
-  1. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。
+  1. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。   
   2. 在 EC2 中启动 MapReduce 的 `Coordinator` 和多个 `Worker` 进程。
-  3. 原始的数据map到
-  4. 执行 MapReduce 任务：
+  3. 执行 MapReduce 任务：
      - 启动 `Coordinator`，指定输入文件。
      - 启动 `Worker`，完成 Map 和 Reduce 任务。
-  5. 展示输出文件 `mr-out-*` 的生成，验证任务结果。
+     - Map出来的文件在mr-xx上，分布式的，展示几个。
+  4. 展示输出文件 `mr-out-*` 的生成（这是reduce的结果，因为是分布式的，所以分布在各个mr-out-），验证任务结果。
 
 ---
 
@@ -66,9 +66,8 @@ Now, let's dive into the demonstration."
 "In conclusion, our system demonstrates the following key features:
 
 Distributed architecture that enables efficient task processing across multiple workers.
-Fault tolerance and auto-recovery, ensuring the system remains robust even in the event of failures.
+Fault tolerance ensuring the system remains robust even in the event of failures.
 Cloud integration that enhances scalability and reliability by leveraging AWS infrastructure.
-As for future improvements, we aim to further optimize intermediate file handling using S3 for enhanced efficiency. However, due to access restrictions, this could not be fully implemented in the current project.
 
 That's all for our demonstration, thank you for watching!"
 ```
