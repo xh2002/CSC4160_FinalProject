@@ -12,6 +12,7 @@
 Hello everyone, and welcome to the demonstration of our CSC4160 Cloud Computing project: A Cloud-Based Distributed MapReduce System.
 This project aims to showcase the power of distributed and cloud computing by running the MapReduce framework in AWS environment.
 We have implemented three key functionalities:
+1. Mapreduce Implementation: Implemented the Mapreduce framework in Google's paper based on Go.
 1. Cloud Environment Integration: Deploying MapReduce on AWS EC2 and utilizing S3 for data storage as much as possible.
 2. Auto Scaling and Fault Tolerance: Ensuring the system can recover from failures and redistribute tasks efficiently.
 3. Performance Testing: Visualizing the system's performance and scalability using AWS CloudWatch metrics.
