@@ -22,12 +22,13 @@ Now, let's dive into the demonstration."
 
 ### **2. 云环境集成**
 - **演示内容**：
-  1. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。   
+  1. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。
   2. 在 EC2 中启动 MapReduce 的 `Coordinator` 和多个 `Worker` 进程。
-  3. 执行 MapReduce 任务：
+  3. 原始的数据map到
+  4. 执行 MapReduce 任务：
      - 启动 `Coordinator`，指定输入文件。
      - 启动 `Worker`，完成 Map 和 Reduce 任务。
-  4. 展示输出文件 `mr-out-*` 的生成，验证任务结果。
+  5. 展示输出文件 `mr-out-*` 的生成，验证任务结果。
 
 ---
 
