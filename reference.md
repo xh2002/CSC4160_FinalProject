@@ -28,7 +28,7 @@ https://blog.josejg.com/debugging-pretty/
 Lab的实现步骤
 https://jasonkayzk.github.io/2022/10/08/mit-6-824-lab1-MapReduce%E6%80%BB%E7%BB%93/
 
-
+https://horn-samba-336.notion.site/4160-1575acf272d0807bb620f80cc914b7ac
 
 
 
