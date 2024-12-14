@@ -5,6 +5,14 @@ Final Project of CSC4160 at CUHK(SZ): Cloud-Based Distributed MapReduce System
 > - Boshi Xu (122040075)
 > - Danyang Chen (123090018)
 
+
+### Key Points:
+1. Mapreduce Implementation
+2. Cloud Environment Integration
+3. Auto Scaling and Fault Tolerance
+4. Performance Testing
+
+
  Timeline:  
     三个阶段： 
     提案（10月22日，2分）：描述选题和背景信息，需清晰呈现。   
