@@ -11,7 +11,6 @@ Including:
 1. Cloud environment integration
 2. Wordcount execution
 3. Fault Tolerance
-4. CPU observation
 
 
  Timeline:  
