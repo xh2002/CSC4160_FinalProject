@@ -3,6 +3,7 @@
 ### **1. 开场介绍**
 - **项目名称**：基于云的分布式 MapReduce 系统  
 - **主要功能**：
+  - **Mapreduce 实现**：基于Go实现了Google论文中的Mapreduce框架
   - **云环境集成**：将 MapReduce 部署到 AWS EC2，并尽量使用 S3 存储数据。
   - **自动扩展与容错**：实现自动恢复机制和任务重分配。
   - **性能测试**：通过 CloudWatch 可视化系统性能。
@@ -20,8 +21,8 @@ Now, let's dive into the demonstration."
 
 ### **2. 云环境集成**
 - **演示内容**：
-  1. 在 EC2 中启动 MapReduce 的 `Coordinator` 和多个 `Worker` 进程。
-  2. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。
+  1. 展示 Python 脚本（`./py/download.py`）从开放的 S3 桶下载输入数据的过程。   
+  2. 在 EC2 中启动 MapReduce 的 `Coordinator` 和多个 `Worker` 进程。
   3. 执行 MapReduce 任务：
      - 启动 `Coordinator`，指定输入文件。
      - 启动 `Worker`，完成 Map 和 Reduce 任务。

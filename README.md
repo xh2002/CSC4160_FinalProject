@@ -1,5 +1,9 @@
 # CSC4160_FinalProject
- Final Project of CSC4160 at CUHK(SZ)
+Final Project of CSC4160 at CUHK(SZ): Cloud-Based Distributed MapReduce System
+
+> **Team Members:**
+> - Boshi Xu (122040075)
+> - Danyang Chen (123090018)
 
  Timeline:  
     三个阶段： 
