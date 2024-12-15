@@ -4,6 +4,9 @@ Final Project of CSC4160 at CUHK(SZ): Cloud-Based Distributed MapReduce System
 ## **Introduction**  
 This project implements a cloud-based distributed MapReduce system inspired by Google’s original MapReduce framework. It demonstrates scalability, fault tolerance, and integration with cloud services for large-scale data processing.
 
+## **Demo**
+The demostration is provide via this [link](https://www.bilibili.com/video/BV1jUB7YmEhP), we recommend to turn on English Subtitles when watching.
+
 
 ## **Setup Instructions**  
 
