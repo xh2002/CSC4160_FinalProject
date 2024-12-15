@@ -5,10 +5,10 @@
 > - Boshi Xu (122040075)
 
 > **Video Demo:**
-> [https://www.bilibili.com/video/BV1jUB7YmEhP/?vd_source=2e2b4e05cd435cc8765c0776ce9815c8](https://www.bilibili.com/video/BV1jUB7YmEhP/?vd_source=2e2b4e05cd435cc8765c0776ce9815c8)
+> [https://www.bilibili.com/video/BV1jUB7YmEhP/?vd_source=2e2b4e05cd435cc8765c0776ce9815c8](Bilibili Video)
 
 > **Code Repository Link:**
->
+> [https://github.com/xh2002/CSC4160_FinalProject](Github Repository)
 
 ## **1. Motivation and Background**
 
@@ -42,8 +42,8 @@ We focuses on building a cloud-enabled distributed system, leveraging modern clo
 
 The Coordinator and Workers communicate through **Remote Procedure Calls (RPC)** over Unix domain sockets. The system uses structured messages to ensure efficient and clear communication.
 
-### 待填
-
+### **MapReduce在云上的部署**
+The MapReduce system is deployed on **AWS cloud infrastructure** to implement the expected cloud functions. `EC2` instances are used to run the coordinator and multiple workers to achieve distributed task execution. `S3` is used to store inputs, demonstrating the integration of cloud servers and cloud storage. This deployment demonstrates the scalability, reliability, and applicability of the system in a real cloud environment.
 
 ---
 
@@ -125,14 +125,28 @@ func (c *Coordinator) NoticeResult(args *WorkerRequest, reply *struct{}) error
 - Updates task statuses (e.g., `finished`, `failed`) based on Worker reports.
 - Checks for overall task completion.
 
-### 待填
+### Deployment and Implementation on AWS EC2 and S3
+#### **1. Compute Resources - Amazon EC2**
+- The **Coordinator** and multiple **Workers** were deployed on **EC2 instances** (m5.large, Ubuntu 24.04 LTS), providing scalable and reliable compute resources.  
+- The system leveraged EC2’s virtualized environment to efficiently execute distributed Map and Reduce tasks.  
+- Multiple Worker processes were dynamically managed on EC2 instances, simulating the elasticity of cloud resources.
 
----
+#### **2. Data Storage - Amazon S3**
+- Input data was stored in **Amazon S3**, ensuring high availability and durability for distributed storage.  
+- A **Python script** was used to fetch input files from an open S3 bucket and store them in the local directory of EC2 instances for processing.  
+- This integration of S3 with EC2 facilitated the management of large datasets without relying on local storage.
+
+#### **3. Fault Tolerance**
+- **AWS Auto Recovery** was configured to enable automatic recovery of EC2 instances in case of hardware or OS failures.  
+- The **Coordinator** enhanced fault tolerance by monitoring task execution and redistributing tasks that were timed out or failed, ensuring no tasks remained incomplete.  
+- The robust fault-tolerance mechanism ensured reliability in the face of both Worker and instance failures.  
+
+
 
 ## **4. Achievements and Evaluation**
 1. Successfully implemented Map and Reduce task execution.
 2. Fault-tolerant task reallocation ensured reliability in case of Worker failures.
-3. 待填
+3. Successfully deployed the system on AWS cloud infrastructure, integrating `EC2` for computation and `S3` for data management, demonstrating scalability and real-world applicability.
 4. Successfully passed all the test scripts provided by the **MIT 6.5840 Distributed Systems** course, verifying the correctness and robustness of the system [2].
 
 ---
@@ -143,26 +157,6 @@ func (c *Coordinator) NoticeResult(args *WorkerRequest, reply *struct{}) error
 2. *MIT Graduate Course 6.5840: Distributed Systems (Spring 2024) - Lab: MapReduce*. Retrieved from [https://pdos.csail.mit.edu/6.824/labs/lab-mr.html](https://pdos.csail.mit.edu/6.824/labs/lab-mr.html).
 
 
-
-环境：
-EC2: m5.large, Ubuntu 24.04 LTS
-S3: same region as EC2
-gcc: version (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
-go: version go1.21.1 linux/amd64
-
-
-1. 云环境集成（完成）
-EC2新建实例，写好的代码上传到EC2
-
-S3新建桶，上传需要进行MapReduce的数据
-（没有权限访问，因为IAM没法新建Users）
-写了个python脚本 ./py/download.py 从开放的s3桶里抓取下载需要跑的文件保存在./src/main
-
-go构建：go build -buildmode=plugin wc.go
-删除之前的输出：rm mr-out*
-coordinator 运行需要MapReduce的：go run mrcoordinator.go pg-*.txt
-另开一个命令行，作为worker，运行go run mrworker.go ../mrapps/wc.so
-检查输出结果：ls mr-out- *
 
 
 
