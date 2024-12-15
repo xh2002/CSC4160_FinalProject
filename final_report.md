@@ -125,7 +125,7 @@ func (c *Coordinator) NoticeResult(args *WorkerRequest, reply *struct{}) error
 - Updates task statuses (e.g., `finished`, `failed`) based on Worker reports.
 - Checks for overall task completion.
 
-### Deployment and Implementation on AWS EC2 and S3
+### **3.4 Deployment and Implementation on AWS EC2 and S3**
 #### **1. Compute Resources - Amazon EC2**
 - The **Coordinator** and multiple **Workers** were deployed on **EC2 instances** (m5.large, Ubuntu 24.04 LTS), providing scalable and reliable compute resources.  
 - The system leveraged EC2’s virtualized environment to efficiently execute distributed Map and Reduce tasks.  
