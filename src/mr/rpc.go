@@ -1,38 +1,38 @@
 package mr
 
 import (
-	"os"
-	"strconv"
+    "os"
+    "strconv"
 )
 
-// 消息类型的枚举定义
+// Enumeration definition for message types
 type MsgType int
 
-// 消息类型常量
+// Constants for message types
 const (
-	RequestTask         MsgType = iota // Worker 请求任务
-	AssignMapTask                      // Coordinator 分配 Map 任务
-	AssignReduceTask                   // Coordinator 分配 Reduce 任务
-	MapTaskCompleted                   // Worker 通知 Map 任务完成
-	MapTaskFailed                      // Worker 通知 Map 任务失败
-	ReduceTaskCompleted                // Worker 通知 Reduce 任务完成
-	ReduceTaskFailed                   // Worker 通知 Reduce 任务失败
-	CoordinatorEnd                     // Coordinator 通知 Worker 系统关闭
-	CoordinatorWait                    // Coordinator 通知 Worker 等待下一任务
+    RequestTask         MsgType = iota // Worker requests a task
+    AssignMapTask                      // Coordinator assigns a Map task
+    AssignReduceTask                   // Coordinator assigns a Reduce task
+    MapTaskCompleted                   // Worker notifies that a Map task is completed
+    MapTaskFailed                      // Worker notifies that a Map task has failed
+    ReduceTaskCompleted                // Worker notifies that a Reduce task is completed
+    ReduceTaskFailed                   // Worker notifies that a Reduce task has failed
+    CoordinatorEnd                     // Coordinator notifies Worker to shut down
+    CoordinatorWait                    // Coordinator notifies Worker to wait for the next task
 )
 
-// 用于 Worker 向 Coordinator 发送消息
+// Used by Worker to send messages to Coordinator
 type WorkerRequest struct {
-	Type   MsgType // 消息类型
-	TaskID int     // 任务 ID，适用于任务完成或失败通知
+    Type   MsgType // Message type
+    TaskID int     // Task ID, applicable for task completion or failure notifications
 }
 
-// 用于 Coordinator 向 Worker 回复消息
+// Used by Coordinator to reply to Worker
 type CoordinatorResponse struct {
-	Type      MsgType // 消息类型
-	TaskID    int     // 分配的任务 ID
-	InputFile string  // Map 任务的输入文件路径
-	NumReduce int     // Reduce 任务总数
+    Type      MsgType // Message type
+    TaskID    int     // Assigned task ID
+    InputFile string  // Input file path for Map task
+    NumReduce int     // Total number of Reduce tasks
 }
 
 // Cook up a unique-ish UNIX-domain socket name
@@ -40,7 +40,7 @@ type CoordinatorResponse struct {
 // Can't use the current directory since
 // Athena AFS doesn't support UNIX-domain sockets.
 func coordinatorSock() string {
-	s := "/var/tmp/5840-mr-"
-	s += strconv.Itoa(os.Getuid())
-	return s
+    s := "/var/tmp/5840-mr-"
+    s += strconv.Itoa(os.Getuid())
+    return s
 }

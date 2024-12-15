@@ -10,49 +10,49 @@ import (
 	"time"
 )
 
-// 定义任务状态
+// Define task status
 type taskStatus int
 
 const (
-	idle     taskStatus = iota // 未分配
-	running                    // 正在运行
-	finished                   // 已完成
-	failed                     // 失败
+	idle     taskStatus = iota // Not assigned
+	running                    // Running
+	finished                   // Completed
+	failed                     // Failed
 )
 
-// Map 任务信息
+// Map task information
 type MapTaskInfo struct {
-	TaskID    int        // 任务 ID
-	Status    taskStatus // 任务状态
-	StartTime time.Time  // 任务开始时间
-	InputFile string     // 输入文件名
+	TaskID    int        // Task ID
+	Status    taskStatus // Task status
+	StartTime time.Time  // Task start time
+	InputFile string     // Input file name
 }
 
-// Reduce 任务信息
+// Reduce task information
 type ReduceTaskInfo struct {
-	TaskID    int        // 任务 ID
-	Status    taskStatus // 任务状态
-	StartTime time.Time  // 任务开始时间
+	TaskID    int        // Task ID
+	Status    taskStatus // Task status
+	StartTime time.Time  // Task start time
 }
 
-// Coordinator 结构体
+// Coordinator struct
 type Coordinator struct {
-	mu          sync.Mutex              // 保护共享数据的锁
-	mapTasks    map[int]*MapTaskInfo    // 所有 Map 任务
-	reduceTasks map[int]*ReduceTaskInfo // 所有 Reduce 任务
-	nReduce     int                     // Reduce 任务数量
-	mapDone     bool                    // 是否所有 Map 任务完成
-	reduceDone  bool                    // 是否所有 Reduce 任务完成
-	allDone     bool                    // 是否所有任务完成
-	taskTimeout time.Duration           // 任务超时时间
+	mu          sync.Mutex              // Lock to protect shared data
+	mapTasks    map[int]*MapTaskInfo    // All Map tasks
+	reduceTasks map[int]*ReduceTaskInfo // All Reduce tasks
+	nReduce     int                     // Number of Reduce tasks
+	mapDone     bool                    // Whether all Map tasks are completed
+	reduceDone  bool                    // Whether all Reduce tasks are completed
+	allDone     bool                    // Whether all tasks are completed
+	taskTimeout time.Duration           // Task timeout duration
 }
 
-// 初始化任务
+// Initialize tasks
 func (c *Coordinator) initTasks(files []string) {
 	c.mapTasks = make(map[int]*MapTaskInfo)
 	c.reduceTasks = make(map[int]*ReduceTaskInfo)
 
-	// 初始化 Map 任务
+	// Initialize Map tasks
 	for i, file := range files {
 		c.mapTasks[i] = &MapTaskInfo{
 			TaskID:    i,
@@ -61,7 +61,7 @@ func (c *Coordinator) initTasks(files []string) {
 		}
 	}
 
-	// 初始化 Reduce 任务
+	// Initialize Reduce tasks
 	for i := 0; i < c.nReduce; i++ {
 		c.reduceTasks[i] = &ReduceTaskInfo{
 			TaskID: i,
@@ -74,11 +74,11 @@ func (c *Coordinator) AskForTask(args *WorkerRequest, reply *CoordinatorResponse
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	// 分配 Map 任务
+	// Assign Map tasks
 	if !c.mapDone {
 		for _, task := range c.mapTasks {
 			if task.Status == idle || (task.Status == running && time.Since(task.StartTime) > c.taskTimeout) {
-				// 分配任务
+				// Assign task
 				task.Status = running
 				task.StartTime = time.Now()
 				reply.Type = AssignMapTask
@@ -86,22 +86,22 @@ func (c *Coordinator) AskForTask(args *WorkerRequest, reply *CoordinatorResponse
 				reply.InputFile = task.InputFile
 				reply.NumReduce = c.nReduce
 
-				// 添加日志
+				// Log assignment
 				log.Printf("Coordinator: Assigned Map Task %d with file %s to Worker", task.TaskID, task.InputFile)
 				return nil
 			}
 		}
 
-		// 如果 Map 任务还未完成，但没有可分配的任务
+		// If Map tasks are not completed but no tasks are available to assign
 		reply.Type = CoordinatorWait
 		return nil
 	}
 
-	// 分配 Reduce 任务
+	// Assign Reduce tasks
 	if c.mapDone && !c.reduceDone {
 		for _, task := range c.reduceTasks {
 			if task.Status == idle || (task.Status == running && time.Since(task.StartTime) > c.taskTimeout) {
-				// 分配任务
+				// Assign task
 				task.Status = running
 				task.StartTime = time.Now()
 				reply.Type = AssignReduceTask
@@ -111,12 +111,12 @@ func (c *Coordinator) AskForTask(args *WorkerRequest, reply *CoordinatorResponse
 			}
 		}
 
-		// 如果 Reduce 任务还未完成，但没有可分配的任务
+		// If Reduce tasks are not completed but no tasks are available to assign
 		reply.Type = CoordinatorWait
 		return nil
 	}
 
-	// 通知 Worker 退出
+	// Notify Worker to exit
 	reply.Type = CoordinatorEnd
 	c.allDone = true
 	return nil
@@ -124,23 +124,23 @@ func (c *Coordinator) AskForTask(args *WorkerRequest, reply *CoordinatorResponse
 
 func (c *Coordinator) monitorTimeouts() {
 	for {
-		time.Sleep(time.Second) // 每秒检查一次任务状态
+		time.Sleep(time.Second) // Check task status every second
 		c.mu.Lock()
 
-		// 检查 Map 任务是否超时
+		// Check if Map tasks are timed out
 		if !c.mapDone {
 			for _, task := range c.mapTasks {
 				if task.Status == running && time.Since(task.StartTime) > c.taskTimeout {
-					task.Status = idle // 超时，重置任务为未分配状态
+					task.Status = idle // Timeout, reset task to idle
 				}
 			}
 		}
 
-		// 检查 Reduce 任务是否超时
+		// Check if Reduce tasks are timed out
 		if c.mapDone && !c.reduceDone {
 			for _, task := range c.reduceTasks {
 				if task.Status == running && time.Since(task.StartTime) > c.taskTimeout {
-					task.Status = idle // 超时，重置任务为未分配状态
+					task.Status = idle // Timeout, reset task to idle
 				}
 			}
 		}
@@ -149,33 +149,33 @@ func (c *Coordinator) monitorTimeouts() {
 	}
 }
 
-// RPC 处理：Worker 汇报任务状态
+// RPC handler: Worker reports task status
 func (c *Coordinator) NoticeResult(args *WorkerRequest, reply *struct{}) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	if args.Type == MapTaskCompleted {
-		// 更新 Map 任务状态
+		// Update Map task status
 		if task, ok := c.mapTasks[args.TaskID]; ok && task.Status == running {
 			task.Status = finished
 		}
 
-		// 检查是否所有 Map 任务完成
+		// Check if all Map tasks are completed
 		c.mapDone = c.checkAllMapTasksDone()
 	} else if args.Type == ReduceTaskCompleted {
-		// 更新 Reduce 任务状态
+		// Update Reduce task status
 		if task, ok := c.reduceTasks[args.TaskID]; ok && task.Status == running {
 			task.Status = finished
 		}
 
-		// 检查是否所有 Reduce 任务完成
+		// Check if all Reduce tasks are completed
 		c.reduceDone = c.checkAllReduceTasksDone()
 	}
 
 	return nil
 }
 
-// 检查是否所有 Map 任务完成
+// Check if all Map tasks are completed
 func (c *Coordinator) checkAllMapTasksDone() bool {
 	for _, task := range c.mapTasks {
 		if task.Status != finished {
@@ -185,7 +185,7 @@ func (c *Coordinator) checkAllMapTasksDone() bool {
 	return true
 }
 
-// 检查是否所有 Reduce 任务完成
+// Check if all Reduce tasks are completed
 func (c *Coordinator) checkAllReduceTasksDone() bool {
 	for _, task := range c.reduceTasks {
 		if task.Status != finished {
@@ -195,7 +195,7 @@ func (c *Coordinator) checkAllReduceTasksDone() bool {
 	return true
 }
 
-// RPC 服务启动
+// Start RPC server
 func (c *Coordinator) server() {
 	rpc.Register(c)
 	rpc.HandleHTTP()
@@ -208,24 +208,24 @@ func (c *Coordinator) server() {
 	go http.Serve(l, nil)
 }
 
-// 检查是否所有任务完成
+// Check if all tasks are completed
 func (c *Coordinator) Done() bool {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.allDone
 }
 
-// 创建 Coordinator
+// Create Coordinator
 func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	c := Coordinator{
 		nReduce:     nReduce,
-		taskTimeout: 10 * time.Second, // 任务超时时间为 10 秒
+		taskTimeout: 10 * time.Second, // Task timeout duration is 10 seconds
 	}
 
-	// 初始化任务
+	// Initialize tasks
 	c.initTasks(files)
 
-	// 启动 RPC 服务
+	// Start RPC server
 	go c.monitorTimeouts()
 	c.server()
 	return &c
