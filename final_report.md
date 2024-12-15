@@ -5,10 +5,10 @@
 > - Boshi Xu (122040075)
 
 > **Video Demo:**
-> [https://www.bilibili.com/video/BV1jUB7YmEhP](Bilibili Video (Please turn on the Subtitles when watching))
+> [https://www.bilibili.com/video/BV1jUB7YmEhP] (Bilibili Video (Please turn on the Subtitles when watching))
 
 > **Code Repository Link:**
-> [https://github.com/xh2002/CSC4160_FinalProject](Github Repository)
+> [https://github.com/xh2002/CSC4160_FinalProject] (Github Repository)
 
 ## **1. Motivation and Background**
 
